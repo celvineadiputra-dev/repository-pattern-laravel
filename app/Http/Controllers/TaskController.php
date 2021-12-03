@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Repository\Task\TaskRepository;
+use App\Services\Task\TaskService;
 use App\Utils\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +14,7 @@ class TaskController extends Controller
     use ResponseTrait;
     protected $task;
 
-    public function __construct(TaskRepository $task)
+    public function __construct(TaskService $task)
     {
         $this->task = $task;
     }
@@ -27,7 +27,7 @@ class TaskController extends Controller
     public function index()
     {
         try {
-            $task = $this->task->all();
+            $task = $this->task->getAllActive();
             return $this->infoResponse(200, $task, "List Task");
         } catch (\Throwable $e) {
             return $this->errorResponse(500, [], $e->getMessage());
